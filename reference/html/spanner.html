@@ -6,164 +6,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
 <title>Spring Data Cloud Spanner</title>
-<link rel="stylesheet" href="css/spring.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
-.hidden {
-	display: none;
-}
-
-.switch {
-	border-width: 1px 1px 0 1px;
-	border-style: solid;
-	border-color: #7a2518;
-	display: inline-block;
-}
-
-.switch--item {
-	padding: 10px;
-	background-color: #ffffff;
-	color: #7a2518;
-	display: inline-block;
-	cursor: pointer;
-}
-
-.switch--item:not(:first-child) {
-	border-width: 0 0 0 1px;
-	border-style: solid;
-	border-color: #7a2518;
-}
-
-.switch--item.selected {
-	background-color: #7a2519;
-	color: #ffffff;
-}
-
-</style>
-<script type="text/javascript">
-function addBlockSwitches() {
-	for (var primary of document.querySelectorAll('.primary')) {
-		var switchItem = createSwitchItem(primary, createBlockSwitch(primary));
-		switchItem.item.classList.add("selected");
-		var title = primary.querySelector('.title')
-		title.remove();
-	}
-	for (var secondary of document.querySelectorAll('.secondary')) {
-		var primary = findPrimary(secondary);
-		if (primary === null) {
-			console.error("Found secondary block with no primary sibling");
-		}
-		else {
-			var switchItem = createSwitchItem(secondary, primary.querySelector('.switch'));
-			switchItem.content.classList.add("hidden");
-			primary.append(switchItem.content);
-			secondary.remove();
-		}
-	}
-}
-
-function createElementFromHtml(html) {
-	var template = document.createElement('template');
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
-function createBlockSwitch(primary) {
-    var blockSwitch = createElementFromHtml('<div class="switch"></div>');
-    primary.prepend(blockSwitch)
-	return blockSwitch;
-}
-
-function findPrimary(secondary) {
-	var candidate = secondary.previousElementSibling;
-	while (candidate != null && !candidate.classList.contains('primary')) {
-		candidate = candidate.previousElementSibling;
-	}
-	return candidate;
-}
-
-function createSwitchItem(block, blockSwitch) {
-	var blockName = block.querySelector('.title').textContent;
-	var content = block.querySelectorAll('.content').item(0);
-	var colist = nextSibling(block, '.colist');
-	if (colist != null) {
-		content.append(colist);
-	}
-	var item = createElementFromHtml('<div class="switch--item">' + blockName + '</div>');
-	item.dataset.blockName = blockName;
-	content.dataset.blockName = blockName;
-	blockSwitch.append(item);
-	return {'item': item, 'content': content};
-}
-
-function nextSibling(element, selector) {
-	var sibling = element.nextElementSibling;
-	while (sibling) {
-		if (sibling.matches(selector)) {
-			return sibling;
-		}
-		sibling = sibling.nextElementSibling;
-	}
-}
-
-function globalSwitch() {
-	document.querySelectorAll(".switch--item").forEach(function(item) {
-		var blockId = blockIdForSwitchItem(item);
-		var handler = function(event) {
-			selectedText = event.target.textContent;
-			window.localStorage.setItem(blockId, selectedText);
-			for (var switchItem of document.querySelectorAll(".switch--item")) {
-				if (blockIdForSwitchItem(switchItem) === blockId && switchItem.textContent === selectedText) {
-					select(switchItem);
-				}
-			}
-		}
-		item.addEventListener("click", handler);
-		if (item.textContent === window.localStorage.getItem(blockId)) {
-			select(item);
-		}
-	});
-}
-
-function select(selected) {
-	for (var child of selected.parentNode.children) {
-		child.classList.remove("selected");
-	}
-	selected.classList.add("selected");
-	for (var child of selected.parentNode.parentNode.children) {
-		if (child.classList.contains("content")) {
-			if (selected.dataset.blockName === child.dataset.blockName) {
-				child.classList.remove("hidden");
-			}
-			else {
-				child.classList.add("hidden");
-			}
-		}
-	}	
-}
-
-function blockIdForSwitchItem(item) {
-	idComponents = []
-	for (var switchItem of item.parentNode.querySelectorAll(".switch--item")) {
-		idComponents.push(switchItem.textContent.toLowerCase());
-	}
-	return idComponents.sort().join("-")
-}
-
-window.onload = function() {
-	addBlockSwitches();
-	globalSwitch();
-};
-
-</script>
+<link rel="stylesheet" href="css/site.css">
+<script src="js/setup.js"></script><script defer src="js/site.js"></script>
 
 </head>
-<body class="book toc2 toc-left">
+<body class="book toc2 toc-left"><div id="banner-container" class="container" role="banner">
+  <div id="banner" class="contained" role="banner">
+    <div id="switch-theme">
+      <input type="checkbox" id="switch-theme-checkbox" />
+      <label for="switch-theme-checkbox">Dark Theme</label>
+    </div>
+  </div>
+</div>
+<div id="tocbar-container" class="container" role="navigation">
+  <div id="tocbar" class="contained" role="navigation">
+    <button id="toggle-toc"></button>
+  </div>
+</div>
+<div id="main-container" class="container">
+  <div id="main" class="contained">
+    <div id="doc" class="doc">
 <div id="header">
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
+<span id="back-to-index"><a href="${index-link}">Back to index</a></span><ul class="sectlevel1">
 <li><a href="#spring-data-cloud-spanner">Spring Data Cloud Spanner</a>
 <ul class="sectlevel2">
 <li><a href="#_configuration">Configuration</a></li>
@@ -178,6 +44,7 @@ window.onload = function() {
 <li><a href="#_spring_boot_actuator_support">Spring Boot Actuator Support</a></li>
 <li><a href="#_cloud_spanner_emulator">Cloud Spanner Emulator</a></li>
 <li><a href="#_sample">Sample</a></li>
+<li><a href="#_test">Test</a></li>
 </ul>
 </li>
 </ul>
@@ -185,14 +52,14 @@ window.onload = function() {
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="spring-data-cloud-spanner"><a class="link" href="#spring-data-cloud-spanner">Spring Data Cloud Spanner</a></h2>
+<h2 id="spring-data-cloud-spanner"><a class="anchor" href="#spring-data-cloud-spanner"></a><a class="link" href="#spring-data-cloud-spanner">Spring Data Cloud Spanner</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://projects.spring.io/spring-data/">Spring Data</a> is an abstraction for storing and retrieving POJOs in numerous storage technologies.
-Spring Cloud GCP adds Spring Data support for <a href="https://cloud.google.com/spanner/">Google Cloud Spanner</a>.</p>
+Spring Framework on Google Cloud adds Spring Data support for <a href="https://cloud.google.com/spanner/">Google Cloud Spanner</a>.</p>
 </div>
 <div class="paragraph">
-<p>Maven coordinates for this module only, using <a href="getting-started.html#bill-of-materials">Spring Cloud GCP BOM</a>:</p>
+<p>Maven coordinates for this module only, using <a href="getting-started.html#bill-of-materials">Spring Framework on Google Cloud BOM</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -241,7 +108,7 @@ To use the starter, see the coordinates see below.</p>
 <p>This setup takes care of bringing in the latest compatible version of Cloud Java Cloud Spanner libraries as well.</p>
 </div>
 <div class="sect2">
-<h3 id="_configuration"><a class="link" href="#_configuration">Configuration</a></h3>
+<h3 id="_configuration"><a class="anchor" href="#_configuration"></a><a class="link" href="#_configuration">Configuration</a></h3>
 <div class="paragraph">
 <p>To setup Spring Data Cloud Spanner, you have to configure the following:</p>
 </div>
@@ -256,7 +123,7 @@ To use the starter, see the coordinates see below.</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_cloud_spanner_settings"><a class="link" href="#_cloud_spanner_settings">Cloud Spanner settings</a></h4>
+<h4 id="_cloud_spanner_settings"><a class="anchor" href="#_cloud_spanner_settings"></a><a class="link" href="#_cloud_spanner_settings">Cloud Spanner settings</a></h4>
 <div class="paragraph">
 <p>You can use the Spring Boot Starter for Spring Data Spanner to autoconfigure Google Cloud Spanner in your Spring application.
 It contains all the necessary setup that makes it easy to authenticate with your Google Cloud project.
@@ -296,7 +163,7 @@ The following configuration options are available:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.cloud.gcp.spanner.project-id</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GCP project ID where the Google Cloud Spanner API is hosted, if different from the one in the <a href="#spring-cloud-gcp-core">Spring Cloud GCP Core Module</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Google Cloud project ID where the Google Cloud Spanner API is hosted, if different from the one in the <a href="#spring-cloud-gcp-core">Spring Framework on Google Cloud Core Module</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
@@ -304,7 +171,7 @@ The following configuration options are available:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.cloud.gcp.spanner.credentials.location</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 credentials for authenticating with the
 Google Cloud Spanner API, if different from the ones in the
-<a href="#spring-cloud-gcp-core">Spring Cloud GCP Core Module</a></p></td>
+<a href="#spring-cloud-gcp-core">Spring Framework on Google Cloud Core Module</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
@@ -312,14 +179,14 @@ Google Cloud Spanner API, if different from the ones in the
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.cloud.gcp.spanner.credentials.encoded-key</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Base64-encoded OAuth2 credentials for authenticating with the
 Google Cloud Spanner API, if different from the ones in the
-<a href="#spring-cloud-gcp-core">Spring Cloud GCP Core Module</a></p></td>
+<a href="#spring-cloud-gcp-core">Spring Framework on Google Cloud Core Module</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.cloud.gcp.spanner.credentials.scopes</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://developers.google.com/identity/protocols/googlescopes">OAuth2 scope</a> for Spring Cloud GCP
-Cloud Spanner credentials</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://developers.google.com/identity/protocols/googlescopes">OAuth2 scope</a> for Spring Framework on Google
+CloudSpanner credentials</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.googleapis.com/auth/spanner.data" class="bare">https://www.googleapis.com/auth/spanner.data</a></p></td>
 </tr>
@@ -406,7 +273,7 @@ For further customization of the client library <code>SpannerOptions</code>, pro
 </div>
 </div>
 <div class="sect3">
-<h4 id="_repository_settings"><a class="link" href="#_repository_settings">Repository settings</a></h4>
+<h4 id="_repository_settings"><a class="anchor" href="#_repository_settings"></a><a class="link" href="#_repository_settings">Repository settings</a></h4>
 <div class="paragraph">
 <p>Spring Data Repositories can be configured via the <code>@EnableSpannerRepositories</code> annotation on your main <code>@Configuration</code> class.
 With our Spring Boot Starter for Spring Data Cloud Spanner, <code>@EnableSpannerRepositories</code> is automatically added.
@@ -414,7 +281,7 @@ It is not required to add it to any other class, unless there is a need to overr
 </div>
 </div>
 <div class="sect3">
-<h4 id="_autoconfiguration"><a class="link" href="#_autoconfiguration">Autoconfiguration</a></h4>
+<h4 id="_autoconfiguration"><a class="anchor" href="#_autoconfiguration"></a><a class="link" href="#_autoconfiguration">Autoconfiguration</a></h4>
 <div class="paragraph">
 <p>Our Spring Boot autoconfiguration creates the following beans available in the Spring application context:</p>
 </div>
@@ -437,7 +304,7 @@ It is not required to add it to any other class, unless there is a need to overr
 </div>
 </div>
 <div class="sect2">
-<h3 id="_object_mapping"><a class="link" href="#_object_mapping">Object Mapping</a></h3>
+<h3 id="_object_mapping"><a class="anchor" href="#_object_mapping"></a><a class="link" href="#_object_mapping">Object Mapping</a></h3>
 <div class="paragraph">
 <p>Spring Data Cloud Spanner allows you to map domain POJOs to Cloud Spanner tables via annotations:</p>
 </div>
@@ -456,7 +323,8 @@ public class Trader {
 
 	@NotMapped
 	Double temporaryNumber;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -464,7 +332,7 @@ public class Trader {
 These properties will not be written to or read from Spanner.</p>
 </div>
 <div class="sect3">
-<h4 id="_constructors"><a class="link" href="#_constructors">Constructors</a></h4>
+<h4 id="_constructors"><a class="anchor" href="#_constructors"></a><a class="link" href="#_constructors">Constructors</a></h4>
 <div class="paragraph">
 <p>Simple constructors are supported on POJOs.
 The constructor arguments can be a subset of the persistent properties.
@@ -490,18 +358,19 @@ public class Trader {
 	    this.traderId = traderId;
 	    this.firstName = firstName;
 	}
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_table"><a class="link" href="#_table">Table</a></h4>
+<h4 id="_table"><a class="anchor" href="#_table"></a><a class="link" href="#_table">Table</a></h4>
 <div class="paragraph">
 <p>The <code>@Table</code> annotation can provide the name of the Cloud Spanner table that stores instances of the annotated class, one per row.
 This annotation is optional, and if not given, the name of the table is inferred from the class name with the first character uncapitalized.</p>
 </div>
 <div class="sect4">
-<h5 id="_spel_expressions_for_table_names"><a class="link" href="#_spel_expressions_for_table_names">SpEL expressions for table names</a></h5>
+<h5 id="_spel_expressions_for_table_names"><a class="anchor" href="#_spel_expressions_for_table_names"></a><a class="link" href="#_spel_expressions_for_table_names">SpEL expressions for table names</a></h5>
 <div class="paragraph">
 <p>In some cases, you might want the <code>@Table</code> table name to be determined dynamically.
 To do that, you can use <a href="https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#expressions">Spring Expression Language</a>.</p>
@@ -514,7 +383,8 @@ To do that, you can use <a href="https://docs.spring.io/spring/docs/current/spri
 <pre class="highlight"><code class="language-java" data-lang="java">@Table(name = "trades_#{tableNameSuffix}")
 public class Trade {
 	// ...
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -524,7 +394,7 @@ For example, if <code>tableNameSuffix</code> has the value "123", the table name
 </div>
 </div>
 <div class="sect3">
-<h4 id="_primary_keys"><a class="link" href="#_primary_keys">Primary Keys</a></h4>
+<h4 id="_primary_keys"><a class="anchor" href="#_primary_keys"></a><a class="link" href="#_primary_keys">Primary Keys</a></h4>
 <div class="paragraph">
 <p>For a simple table, you may only have a primary key consisting of a single column.
 Even in that case, the <code>@PrimaryKey</code> annotation is required.
@@ -553,7 +423,8 @@ public class Trade {
 	private Double shares;
 
 	private String symbol;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -580,7 +451,7 @@ Read <a href="https://cloud.google.com/spanner/docs/schema-and-data-model#primar
 </div>
 </div>
 <div class="sect3">
-<h4 id="_columns"><a class="link" href="#_columns">Columns</a></h4>
+<h4 id="_columns"><a class="anchor" href="#_columns"></a><a class="link" href="#_columns">Columns</a></h4>
 <div class="paragraph">
 <p>All accessible properties on POJOs are automatically recognized as a Cloud Spanner column.
 Column naming is generated by the <code>PropertyNameFieldNamingStrategy</code> by default defined on the <code>SpannerMappingContext</code> bean.
@@ -611,7 +482,7 @@ Any value set in this property will be ignored when writing to Cloud Spanner.</p
 </div>
 </div>
 <div class="sect3">
-<h4 id="_embedded_objects"><a class="link" href="#_embedded_objects">Embedded Objects</a></h4>
+<h4 id="_embedded_objects"><a class="anchor" href="#_embedded_objects"></a><a class="link" href="#_embedded_objects">Embedded Objects</a></h4>
 <div class="paragraph">
 <p>If an object of type <code>B</code> is embedded as a property of <code>A</code>, then the columns of <code>B</code> will be saved in the same Cloud Spanner table as those of <code>A</code>.</p>
 </div>
@@ -653,7 +524,8 @@ class B {
 
   @Column(name = "child_value")
   String value;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -687,7 +559,7 @@ Be careful about this restriction when you use Kotlin&#8217;s data class to hold
 </div>
 </div>
 <div class="sect3">
-<h4 id="_relationships"><a class="link" href="#_relationships">Relationships</a></h4>
+<h4 id="_relationships"><a class="anchor" href="#_relationships"></a><a class="link" href="#_relationships">Relationships</a></h4>
 <div class="paragraph">
 <p>Spring Data Cloud Spanner supports parent-child relationships using the Cloud Spanner <a href="https://cloud.google.com/spanner/docs/schema-and-data-model#creating-interleaved-tables">parent-child interleaved table mechanism</a>.
 Cloud Spanner interleaved tables enforce the one-to-many relationship and provide efficient queries and operations on entities of a single domain parent entity.
@@ -726,7 +598,8 @@ class Album {
   long AlbumId;
 
   String AlbumTitle;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -747,7 +620,8 @@ SpannerDatabaseAdminTemplate databaseAdmin;
 List&lt;String&gt; createStrings = this.schemaUtils.getCreateTableDdlStringsForInterleavedHierarchy(Singer.class);
 
 // Create the tables and also create the database if necessary
-this.databaseAdmin.executeDdlStrings(createStrings, true);</code></pre>
+this.databaseAdmin.executeDdlStrings(createStrings, true);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -784,14 +658,15 @@ A table may have multiple child tables.</p>
 On read, all of the interleaved child rows are also all read.</p>
 </div>
 <div class="sect4">
-<h5 id="_lazy_fetch"><a class="link" href="#_lazy_fetch">Lazy Fetch</a></h5>
+<h5 id="_lazy_fetch"><a class="anchor" href="#_lazy_fetch"></a><a class="link" href="#_lazy_fetch">Lazy Fetch</a></h5>
 <div class="paragraph">
 <p><code>@Interleaved</code> properties are retrieved eagerly by default, but can be fetched lazily for performance in both read and write:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@Interleaved(lazy = true)
-List&lt;Album&gt; albums;</code></pre>
+List&lt;Album&gt; albums;
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -803,7 +678,7 @@ If a property marked for lazy fetching is never retrieved, then it is also skipp
 </div>
 </div>
 <div class="sect4">
-<h5 id="_declarative_filtering_with_where"><a class="link" href="#_declarative_filtering_with_where">Declarative Filtering with <code>@Where</code></a></h5>
+<h5 id="_declarative_filtering_with_where"><a class="anchor" href="#_declarative_filtering_with_where"></a><a class="link" href="#_declarative_filtering_with_where">Declarative Filtering with <code>@Where</code></a></h5>
 <div class="paragraph">
 <p>The <code>@Where</code> annotation could be applied to an entity class or to an interleaved property.
 This annotation provides an SQL where clause that will be applied at the fetching of interleaved collections or the entity itself.</p>
@@ -831,13 +706,14 @@ public class Agreement {
   List&lt;Participant&gt; participants;
   Person person;
   //...
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_supported_types"><a class="link" href="#_supported_types">Supported Types</a></h4>
+<h4 id="_supported_types"><a class="anchor" href="#_supported_types"></a><a class="link" href="#_supported_types">Supported Types</a></h4>
 <div class="paragraph">
 <p>Spring Data Cloud Spanner natively supports the following types for regular fields but also utilizes custom converters (detailed in following sections) and dozens of pre-defined Spring Data custom converters to handle other common Java types.</p>
 </div>
@@ -898,9 +774,9 @@ public class Agreement {
 </div>
 </div>
 <div class="sect3">
-<h4 id="_json_fields"><a class="link" href="#_json_fields">JSON fields</a></h4>
+<h4 id="_json_fields"><a class="anchor" href="#_json_fields"></a><a class="link" href="#_json_fields">JSON fields</a></h4>
 <div class="paragraph">
-<p>Spanner supports <code>JSON</code> type for columns. <code>JSON</code> columns are mapped to custom POJOs annotated with <code>@Column(spannerType = TypeCode.JSON)</code>. Read, write and query with custom SQL query are supported for JSON annotated fields.</p>
+<p>Spanner supports <code>JSON</code> and <code>ARRAY&lt;JSON&gt;</code> type for columns. Such property needs to be annotated with <code>@Column(spannerType = TypeCode.JSON)</code>. <code>JSON</code> columns are mapped to custom POJOs and <code>ARRAY&lt;JSON&gt;</code> columns are mapped to List of custom POJOs. Read, write and query with custom SQL query are supported for JSON annotated fields.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -909,7 +785,10 @@ public class Agreement {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The default Gson instance used to convert to and from JSON representation can be customized by providing a bean of type <code>Gson</code>.
+Spring Boot autoconfigures a <code>Gson</code> bean by default.
+This Gson instance is used by default to convert to and from JSON representation.
+To customize, use <code>spring.gson.*</code> configuration properties or <code>GsonBuilderCustomizer</code> bean as instructed in Spring Boot documentation <a href="https://docs.spring.io/spring-boot/docs/2.6.x/reference/html/features.html#features.json">here</a>.
+Alternatively, you can also provide a customized bean of type <code>Gson</code> in your application.
 </td>
 </tr>
 </table>
@@ -931,12 +810,13 @@ public class Details {
     String name;
     String affiliation;
     Boolean isActive;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_lists"><a class="link" href="#_lists">Lists</a></h4>
+<h4 id="_lists"><a class="anchor" href="#_lists"></a><a class="link" href="#_lists">Lists</a></h4>
 <div class="paragraph">
 <p>Spanner supports <code>ARRAY</code> types for columns.
 <code>ARRAY</code> columns are mapped to <code>List</code> fields in POJOs.</p>
@@ -946,7 +826,8 @@ public class Details {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Double&gt; curve;</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Double&gt; curve;
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -954,7 +835,7 @@ public class Details {
 </div>
 </div>
 <div class="sect3">
-<h4 id="_lists_of_structs"><a class="link" href="#_lists_of_structs">Lists of Structs</a></h4>
+<h4 id="_lists_of_structs"><a class="anchor" href="#_lists_of_structs"></a><a class="link" href="#_lists_of_structs">Lists of Structs</a></h4>
 <div class="paragraph">
 <p>Cloud Spanner queries can <a href="https://cloud.google.com/spanner/docs/query-syntax#using-structs-with-select">construct STRUCT values</a> that appear as columns in the result.
 Cloud Spanner requires STRUCT values appear in ARRAYs at the root level: <code>SELECT ARRAY(SELECT STRUCT(1 as val1, 2 as val2)) as pair FROM Users</code>.</p>
@@ -972,12 +853,13 @@ Cloud Spanner requires STRUCT values appear in ARRAYs at the root level: <code>S
   int val1;
 
   int val2;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_custom_types"><a class="link" href="#_custom_types">Custom types</a></h4>
+<h4 id="_custom_types"><a class="anchor" href="#_custom_types"></a><a class="link" href="#_custom_types">Custom types</a></h4>
 <div class="paragraph">
 <p>Custom converters can be used to extend the type support for user defined types.</p>
 </div>
@@ -1044,7 +926,8 @@ public class Trade {
   //...
   Person person;
   //...
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1057,7 +940,8 @@ public class Trade {
   public String firstName;
   public String lastName;
 
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1082,7 +966,8 @@ public class Trade {
       person.lastName = s.split(" ")[1];
       return person;
     }
-  }</code></pre>
+  }
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1099,7 +984,8 @@ public class ConverterConfiguration {
 				Arrays.asList(new PersonWriteConverter()),
 				Arrays.asList(new PersonReadConverter()));
 	}
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1109,14 +995,14 @@ This means that, for a user-defined class <code>U</code>, write operations use t
 </div>
 </div>
 <div class="sect3">
-<h4 id="_custom_converter_for_struct_array_columns"><a class="link" href="#_custom_converter_for_struct_array_columns">Custom Converter for Struct Array Columns</a></h4>
+<h4 id="_custom_converter_for_struct_array_columns"><a class="anchor" href="#_custom_converter_for_struct_array_columns"></a><a class="link" href="#_custom_converter_for_struct_array_columns">Custom Converter for Struct Array Columns</a></h4>
 <div class="paragraph">
 <p>If a <code>Converter&lt;Struct, A&gt;</code> is provided, then properties of type <code>List&lt;A&gt;</code> can be used in your entity types.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spanner_operations_template"><a class="link" href="#_spanner_operations_template">Spanner Operations &amp; Template</a></h3>
+<h3 id="_spanner_operations_template"><a class="anchor" href="#_spanner_operations_template"></a><a class="link" href="#_spanner_operations_template">Spanner Operations &amp; Template</a></h3>
 <div class="paragraph">
 <p><code>SpannerOperations</code> and its implementation, <code>SpannerTemplate</code>, provides the Template pattern familiar to Spring developers.
 It provides:</p>
@@ -1155,7 +1041,8 @@ public class SpannerTemplateExample {
 		List&lt;Trade&gt; tradesByAction = spannerTemplate.findAll(Trade.class);
 		//...
 	}
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1218,7 +1105,7 @@ SpannerQueryOptions</p>
 </ul>
 </div>
 <div class="sect3">
-<h4 id="_sql_query"><a class="link" href="#_sql_query">SQL Query</a></h4>
+<h4 id="_sql_query"><a class="anchor" href="#_sql_query"></a><a class="link" href="#_sql_query">SQL Query</a></h4>
 <div class="paragraph">
 <p>Cloud Spanner has SQL support for running read-only queries.
 All the query related methods start with <code>query</code> on <code>SpannerTemplate</code>.
@@ -1226,12 +1113,13 @@ By using <code>SpannerTemplate</code>, you can run SQL queries that map to POJOs
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"));</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"));
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_read"><a class="link" href="#_read">Read</a></h4>
+<h4 id="_read"><a class="anchor" href="#_read"></a><a class="link" href="#_read">Read</a></h4>
 <div class="paragraph">
 <p>Spanner exposes a <a href="https://cloud.google.com/spanner/docs/reads">Read API</a> for reading single row or multiple rows in a table or in a secondary index.</p>
 </div>
@@ -1240,7 +1128,8 @@ By using <code>SpannerTemplate</code>, you can run SQL queries that map to POJOs
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class);</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1248,9 +1137,9 @@ By using <code>SpannerTemplate</code>, you can run SQL queries that map to POJOs
 </div>
 </div>
 <div class="sect3">
-<h4 id="_advanced_reads"><a class="link" href="#_advanced_reads">Advanced reads</a></h4>
+<h4 id="_advanced_reads"><a class="anchor" href="#_advanced_reads"></a><a class="link" href="#_advanced_reads">Advanced reads</a></h4>
 <div class="sect4">
-<h5 id="_stale_read"><a class="link" href="#_stale_read">Stale read</a></h5>
+<h5 id="_stale_read"><a class="anchor" href="#_stale_read"></a><a class="link" href="#_stale_read">Stale read</a></h5>
 <div class="paragraph">
 <p>All reads and queries are <strong>strong reads</strong> by default.
 A <strong>strong read</strong> is a read at a current time and is guaranteed to see all data that has been committed up until the start of this read.
@@ -1265,7 +1154,8 @@ With <code>SpannerTemplate</code> you can specify the <code>Timestamp</code> by 
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// a read with options:
 SpannerReadOptions spannerReadOptions = new SpannerReadOptions().setTimestamp(myTimestamp);
-List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class, spannerReadOptions);</code></pre>
+List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class, spannerReadOptions);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1275,7 +1165,8 @@ List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class, spannerRead
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// a query with options:
 SpannerQueryOptions spannerQueryOptions = new SpannerQueryOptions().setTimestamp(myTimestamp);
-List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"), spannerQueryOptions);</code></pre>
+List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"), spannerQueryOptions);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1284,7 +1175,7 @@ Bounded staleness lets Cloud Spanner choose any point in time later than or equa
 </div>
 </div>
 <div class="sect4">
-<h5 id="_read_from_a_secondary_index"><a class="link" href="#_read_from_a_secondary_index">Read from a secondary index</a></h5>
+<h5 id="_read_from_a_secondary_index"><a class="anchor" href="#_read_from_a_secondary_index"></a><a class="link" href="#_read_from_a_secondary_index">Read from a secondary index</a></h5>
 <div class="paragraph">
 <p>Using a <a href="https://cloud.google.com/spanner/docs/secondary-indexes">secondary index</a> is available for Reads via the Template API and it is also implicitly available via SQL for Queries.</p>
 </div>
@@ -1294,12 +1185,13 @@ Bounded staleness lets Cloud Spanner choose any point in time later than or equa
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">SpannerReadOptions spannerReadOptions = new SpannerReadOptions().setIndex("TradesByTrader");
-List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class, spannerReadOptions);</code></pre>
+List&lt;Trade&gt; trades = this.spannerTemplate.readAll(Trade.class, spannerReadOptions);
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_read_with_offsets_and_limits"><a class="link" href="#_read_with_offsets_and_limits">Read with offsets and limits</a></h5>
+<h5 id="_read_with_offsets_and_limits"><a class="anchor" href="#_read_with_offsets_and_limits"></a><a class="link" href="#_read_with_offsets_and_limits">Read with offsets and limits</a></h5>
 <div class="paragraph">
 <p>Limits and offsets are only supported by Queries.
 The following will get only the first two rows of the query:</p>
@@ -1307,7 +1199,8 @@ The following will get only the first two rows of the query:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">SpannerQueryOptions spannerQueryOptions = new SpannerQueryOptions().setLimit(2).setOffset(3);
-List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"), spannerQueryOptions);</code></pre>
+List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT * FROM trades"), spannerQueryOptions);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1315,14 +1208,15 @@ List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of(
 </div>
 </div>
 <div class="sect4">
-<h5 id="_sorting"><a class="link" href="#_sorting">Sorting</a></h5>
+<h5 id="_sorting"><a class="anchor" href="#_sorting"></a><a class="link" href="#_sorting">Sorting</a></h5>
 <div class="paragraph">
 <p>Reads by keys do not support sorting.
 However, queries on the Template API support sorting through standard SQL and also via Spring Data Sort API:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.queryAll(Trade.class, Sort.by("action"));</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.queryAll(Trade.class, Sort.by("action"));
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1332,12 +1226,13 @@ Sorting on columns of Cloud Spanner types STRING and BYTES can be done while ign
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">Sort.by(Order.desc("action").ignoreCase())</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">Sort.by(Order.desc("action").ignoreCase())
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_partial_read"><a class="link" href="#_partial_read">Partial read</a></h5>
+<h5 id="_partial_read"><a class="anchor" href="#_partial_read"></a><a class="link" href="#_partial_read">Partial read</a></h5>
 <div class="paragraph">
 <p>Partial read is only possible when using Queries.
 In case the rows returned by the query have fewer columns than the entity that it will be mapped to, Spring Data will map the returned columns only.
@@ -1346,7 +1241,8 @@ This setting also applies to nested structs and their corresponding nested POJO 
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; trades = this.spannerTemplate.query(Trade.class, Statement.of("SELECT action, symbol FROM trades"),
-    new SpannerQueryOptions().setAllowMissingResultSetColumns(true));</code></pre>
+    new SpannerQueryOptions().setAllowMissingResultSetColumns(true));
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1354,7 +1250,7 @@ This setting also applies to nested structs and their corresponding nested POJO 
 </div>
 </div>
 <div class="sect4">
-<h5 id="_summary_of_options_for_query_vs_read"><a class="link" href="#_summary_of_options_for_query_vs_read">Summary of options for Query vs Read</a></h5>
+<h5 id="_summary_of_options_for_query_vs_read"><a class="anchor" href="#_summary_of_options_for_query_vs_read"></a><a class="link" href="#_summary_of_options_for_query_vs_read">Summary of options for Query vs Read</a></h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -1407,7 +1303,7 @@ This setting also applies to nested structs and their corresponding nested POJO 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_write_update"><a class="link" href="#_write_update">Write / Update</a></h4>
+<h4 id="_write_update"><a class="anchor" href="#_write_update"></a><a class="link" href="#_write_update">Write / Update</a></h4>
 <div class="paragraph">
 <p>The write methods of <code>SpannerOperations</code> accept a POJO and writes all of its properties to Spanner.
 The corresponding Spanner table and entity metadata is obtained from the given object&#8217;s actual type.</p>
@@ -1417,43 +1313,46 @@ The corresponding Spanner table and entity metadata is obtained from the given o
 The row with the original primary key values will not be affected.</p>
 </div>
 <div class="sect4">
-<h5 id="_insert"><a class="link" href="#_insert">Insert</a></h5>
+<h5 id="_insert"><a class="anchor" href="#_insert"></a><a class="link" href="#_insert">Insert</a></h5>
 <div class="paragraph">
 <p>The <code>insert</code> method of <code>SpannerOperations</code> accepts a POJO and writes all of its properties to Spanner, which means the operation will fail if a row with the POJO&#8217;s primary key already exists in the table.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">Trade t = new Trade();
-this.spannerTemplate.insert(t);</code></pre>
+this.spannerTemplate.insert(t);
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_update"><a class="link" href="#_update">Update</a></h5>
+<h5 id="_update"><a class="anchor" href="#_update"></a><a class="link" href="#_update">Update</a></h5>
 <div class="paragraph">
 <p>The <code>update</code> method of <code>SpannerOperations</code> accepts a POJO and writes all of its properties to Spanner, which means the operation will fail if the POJO&#8217;s primary key does not already exist in the table.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// t was retrieved from a previous operation
-this.spannerTemplate.update(t);</code></pre>
+this.spannerTemplate.update(t);
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_upsert"><a class="link" href="#_upsert">Upsert</a></h5>
+<h5 id="_upsert"><a class="anchor" href="#_upsert"></a><a class="link" href="#_upsert">Upsert</a></h5>
 <div class="paragraph">
 <p>The <code>upsert</code> method of <code>SpannerOperations</code> accepts a POJO and writes all of its properties to Spanner using update-or-insert.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// t was retrieved from a previous operation or it's new
-this.spannerTemplate.upsert(t);</code></pre>
+this.spannerTemplate.upsert(t);
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_partial_update"><a class="link" href="#_partial_update">Partial Update</a></h5>
+<h5 id="_partial_update"><a class="anchor" href="#_partial_update"></a><a class="link" href="#_partial_update">Partial Update</a></h5>
 <div class="paragraph">
 <p>The update methods of <code>SpannerOperations</code> operate by default on all properties within the given object, but also accept <code>String[]</code> and <code>Optional&lt;Set&lt;String&gt;&gt;</code> of column names.
 If the <code>Optional</code> of set of column names is empty, then all columns are written to Spanner.
@@ -1462,13 +1361,14 @@ However, if the Optional is occupied by an empty set, then no columns will be wr
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">// t was retrieved from a previous operation or it's new
-this.spannerTemplate.update(t, "symbol", "action");</code></pre>
+this.spannerTemplate.update(t, "symbol", "action");
+</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dml"><a class="link" href="#_dml">DML</a></h4>
+<h4 id="_dml"><a class="anchor" href="#_dml"></a><a class="link" href="#_dml">DML</a></h4>
 <div class="paragraph">
 <p>DML statements can be run by using <code>SpannerOperations.executeDmlStatement</code>.
 Inserts, updates, and deletions can affect any number of rows and entities.</p>
@@ -1479,12 +1379,12 @@ Partitioned DML queries have performance benefits but also have restrictions and
 </div>
 </div>
 <div class="sect3">
-<h4 id="_transactions"><a class="link" href="#_transactions">Transactions</a></h4>
+<h4 id="_transactions"><a class="anchor" href="#_transactions"></a><a class="link" href="#_transactions">Transactions</a></h4>
 <div class="paragraph">
 <p><code>SpannerOperations</code> provides methods to run <code>java.util.Function</code> objects within a single transaction while making available the read and write methods from <code>SpannerOperations</code>.</p>
 </div>
 <div class="sect4">
-<h5 id="_readwrite_transaction"><a class="link" href="#_readwrite_transaction">Read/Write Transaction</a></h5>
+<h5 id="_readwrite_transaction"><a class="anchor" href="#_readwrite_transaction"></a><a class="link" href="#_readwrite_transaction">Read/Write Transaction</a></h5>
 <div class="paragraph">
 <p>Read and write transactions are provided by <code>SpannerOperations</code> via the <code>performReadWriteTransaction</code> method:</p>
 </div>
@@ -1502,7 +1402,8 @@ public String doWorkInsideTransaction() {
       return "transaction completed";
     }
   );
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1525,7 +1426,7 @@ You can use this object just as you would a regular <code>SpannerOperations</cod
 </div>
 </div>
 <div class="sect4">
-<h5 id="_read_only_transaction"><a class="link" href="#_read_only_transaction">Read-only Transaction</a></h5>
+<h5 id="_read_only_transaction"><a class="anchor" href="#_read_only_transaction"></a><a class="link" href="#_read_only_transaction">Read-only Transaction</a></h5>
 <div class="paragraph">
 <p>The <code>performReadOnlyTransaction</code> method is used to perform read-only transactions using a <code>SpannerOperations</code>:</p>
 </div>
@@ -1543,7 +1444,8 @@ public String doWorkInsideTransaction() {
       return "transaction completed";
     }
   );
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1573,7 +1475,7 @@ a few exceptions:</p>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_declarative_transactions_with_transactional_annotation"><a class="link" href="#_declarative_transactions_with_transactional_annotation">Declarative Transactions with @Transactional Annotation</a></h5>
+<h5 id="_declarative_transactions_with_transactional_annotation"><a class="anchor" href="#_declarative_transactions_with_transactional_annotation"></a><a class="link" href="#_declarative_transactions_with_transactional_annotation">Declarative Transactions with @Transactional Annotation</a></h5>
 <div class="paragraph">
 <p>This feature requires a bean of <code>SpannerTransactionManager</code>, which is provided when using <code>spring-cloud-gcp-starter-data-spanner</code>.</p>
 </div>
@@ -1582,10 +1484,19 @@ a few exceptions:</p>
 If a method annotated with <code>@Transactional</code> calls another method also annotated, then both methods will work within the same transaction.
 <code>performReadOnlyTransaction</code> and <code>performReadWriteTransaction</code> cannot be used in <code>@Transactional</code> annotated methods because Cloud Spanner does not support transactions within transactions.</p>
 </div>
+<div class="paragraph">
+<p>Other Google Cloud database-related integrations like Spanner and Firestore can introduce <code>PlatformTransactionManager</code> beans, and can interfere with Datastore Transaction Manager. To disambiguate, explicitly specify the name of the transaction manager bean for such <code>@Transactional</code> methods. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Transactional(transactionManager = "spannerTransactionManager")
+</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_dml_statements"><a class="link" href="#_dml_statements">DML Statements</a></h4>
+<h4 id="_dml_statements"><a class="anchor" href="#_dml_statements"></a><a class="link" href="#_dml_statements">DML Statements</a></h4>
 <div class="paragraph">
 <p><code>SpannerTemplate</code> supports <a href="https://cloud.google.com/spanner/docs/dml-tasks:">DML</a> <code>Statements</code>.
 DML statements can also be run in transactions by using <code>performReadWriteTransaction</code> or by using the <code>@Transactional</code> annotation.</p>
@@ -1593,7 +1504,7 @@ DML statements can also be run in transactions by using <code>performReadWriteTr
 </div>
 </div>
 <div class="sect2">
-<h3 id="_repositories"><a class="link" href="#_repositories">Repositories</a></h3>
+<h3 id="_repositories"><a class="anchor" href="#_repositories"></a><a class="link" href="#_repositories">Repositories</a></h3>
 <div class="paragraph">
 <p><a href="https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#repositories">Spring Data Repositories</a> are a powerful abstraction that can save you a lot of boilerplate code.</p>
 </div>
@@ -1603,7 +1514,8 @@ DML statements can also be run in transactions by using <code>performReadWriteTr
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public interface TraderRepository extends SpannerRepository&lt;Trader, String&gt; {
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1624,7 +1536,8 @@ If the domain POJO type only has a single primary key column, then the primary k
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public interface TradeRepository extends SpannerRepository&lt;Trade, String[]&gt; {
 
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -1654,17 +1567,18 @@ If the domain POJO type only has a single primary key column, then the primary k
 		int count = this.tradeRepository.countByAction("BUY");
 
 	}
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_crud_repository"><a class="link" href="#_crud_repository">CRUD Repository</a></h4>
+<h4 id="_crud_repository"><a class="anchor" href="#_crud_repository"></a><a class="link" href="#_crud_repository">CRUD Repository</a></h4>
 <div class="paragraph">
 <p><code>CrudRepository</code> methods work as expected, with one thing Spanner specific: the <code>save</code> and <code>saveAll</code> methods work as update-or-insert.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_paging_and_sorting_repository"><a class="link" href="#_paging_and_sorting_repository">Paging and Sorting Repository</a></h4>
+<h4 id="_paging_and_sorting_repository"><a class="anchor" href="#_paging_and_sorting_repository"></a><a class="link" href="#_paging_and_sorting_repository">Paging and Sorting Repository</a></h4>
 <div class="paragraph">
 <p>You can also use <code>PagingAndSortingRepository</code> with Spanner Spring Data.
 The sorting and pageable <code>findAll</code> methods available from this interface operate on the current state of the Spanner database.
@@ -1672,7 +1586,7 @@ As a result, beware that the state of the database (and the results) might chang
 </div>
 </div>
 <div class="sect3">
-<h4 id="_spanner_repository"><a class="link" href="#_spanner_repository">Spanner Repository</a></h4>
+<h4 id="_spanner_repository"><a class="anchor" href="#_spanner_repository"></a><a class="link" href="#_spanner_repository">Spanner Repository</a></h4>
 <div class="paragraph">
 <p>The <code>SpannerRepository</code> extends the <code>PagingAndSortingRepository</code>, but adds the read-only and the read-write transaction functionality provided by Spanner.
 These transactions work very similarly to those of <code>SpannerOperations</code>, but is specific to the repository&#8217;s domain type and provides repository functions instead of template functions.</p>
@@ -1694,7 +1608,8 @@ public String doWorkInsideTransaction() {
       return "transaction completed";
     }
   );
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1703,7 +1618,7 @@ public String doWorkInsideTransaction() {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_query_methods"><a class="link" href="#_query_methods">Query Methods</a></h3>
+<h3 id="_query_methods"><a class="anchor" href="#_query_methods"></a><a class="link" href="#_query_methods">Query Methods</a></h3>
 <div class="paragraph">
 <p><code>SpannerRepository</code> supports Query Methods.
 Described in the following sections, these are methods residing in your custom repository interfaces of which implementations are generated based on their names and annotations.
@@ -1714,7 +1629,7 @@ If a POJO is given as a parameter, it will be converted to a <code>Struct</code>
 Comparisons using Struct parameters are limited to <a href="https://cloud.google.com/spanner/docs/data-types#limited-comparisons-for-struct">what is available with Cloud Spanner</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="_query_methods_by_convention"><a class="link" href="#_query_methods_by_convention">Query methods by convention</a></h4>
+<h4 id="_query_methods_by_convention"><a class="anchor" href="#_query_methods_by_convention"></a><a class="link" href="#_query_methods_by_convention">Query methods by convention</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">public interface TradeRepository extends SpannerRepository&lt;Trade, String[]&gt; {
@@ -1725,7 +1640,8 @@ Comparisons using Struct parameters are limited to <a href="https://cloud.google
 	// Named methods are powerful, but can get unwieldy
 	List&lt;Trade&gt; findTop3DistinctByActionAndSymbolIgnoreCaseOrTraderIdOrderBySymbolDesc(
   			String action, String symbol, String traderId);
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1807,7 +1723,8 @@ The Spring Data "AllIgnoreCase" phrase appended at the end of the method name is
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; findBySymbolLike(String symbolFragment);</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; findBySymbolLike(String symbolFragment);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1818,7 +1735,8 @@ The Spring Data "AllIgnoreCase" phrase appended at the end of the method name is
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; findBySymbolContains(String symbolFragment);</code></pre>
+<pre class="highlight"><code class="language-java" data-lang="java">List&lt;Trade&gt; findBySymbolContains(String symbolFragment);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1840,7 +1758,7 @@ The delete operation happens in a single transaction.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_custom_sqldml_query_methods"><a class="link" href="#_custom_sqldml_query_methods">Custom SQL/DML query methods</a></h4>
+<h4 id="_custom_sqldml_query_methods"><a class="anchor" href="#_custom_sqldml_query_methods"></a><a class="link" href="#_custom_sqldml_query_methods">Custom SQL/DML query methods</a></h4>
 <div class="paragraph">
 <p>The example above for <code>List&lt;Trade&gt; fetchByActionNamedQuery(String action)</code> does not match the <a href="https://docs.spring.io/spring-data/data-commons/docs/current/reference/html#repositories.query-methods.query-creation">Spring Data Query creation naming convention</a>, so we have to map a parametrized Spanner SQL query to it.</p>
 </div>
@@ -1878,7 +1796,8 @@ However, to ensure the correct sort order of the final result set, sort options 
 	List&lt;Trade&gt; fetchTrades(Pageable pageable);
 
 	@Query("SELECT * FROM trades ORDER BY price DESC LIMIT 1")
- 	Trade topTrade(Pageable pageable);</code></pre>
+ 	Trade topTrade(Pageable pageable);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1887,7 +1806,8 @@ However, to ensure the correct sort order of the final result set, sort options 
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">	List&lt;Trade&gt; customSortedTrades = tradeRepository.fetchTrades(PageRequest
-  				.of(2, 2, org.springframework.data.domain.Sort.by(Order.asc("id"))));</code></pre>
+  				.of(2, 2, org.springframework.data.domain.Sort.by(Order.asc("id"))));
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1908,7 +1828,8 @@ However, to ensure the correct sort order of the final result set, sort options 
   	String getFirstString(@Param("action") String action);
 
   	@Query("SELECT action FROM trades WHERE action = @action")
-  	List&lt;String&gt; getFirstStringList(@Param("action") String action);</code></pre>
+  	List&lt;String&gt; getFirstStringList(@Param("action") String action);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1918,11 +1839,12 @@ The <code>dmlStatement</code> boolean setting must be set on <code>@Query</code>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">  	@Query(value = "DELETE FROM trades WHERE action = @action", dmlStatement = true)
-  	long deleteByActionQuery(String action);</code></pre>
+  	long deleteByActionQuery(String action);
+</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_query_methods_with_named_queries_properties"><a class="link" href="#_query_methods_with_named_queries_properties">Query methods with named queries properties</a></h5>
+<h5 id="_query_methods_with_named_queries_properties"><a class="anchor" href="#_query_methods_with_named_queries_properties"></a><a class="link" href="#_query_methods_with_named_queries_properties">Query methods with named queries properties</a></h5>
 <div class="paragraph">
 <p>By default, the <code>namedQueriesLocation</code> attribute on <code>@EnableSpannerRepositories</code> points to the <code>META-INF/spanner-named-queries.properties</code> file.
 You can specify the query for a method in the properties file by providing the SQL as the value for the "interface.method" property:</p>
@@ -1937,12 +1859,13 @@ You can specify the query for a method in the properties file by providing the S
 <pre class="highlight"><code class="language-java" data-lang="java">public interface TradeRepository extends SpannerRepository&lt;Trade, String[]&gt; {
 	// This method uses the query from the properties file instead of one generated based on name.
 	List&lt;Trade&gt; fetchByActionNamedQuery(@Param("tag0") String action);
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_query_methods_with_annotation"><a class="link" href="#_query_methods_with_annotation">Query methods with annotation</a></h5>
+<h5 id="_query_methods_with_annotation"><a class="anchor" href="#_query_methods_with_annotation"></a><a class="link" href="#_query_methods_with_annotation">Query methods with annotation</a></h5>
 <div class="paragraph">
 <p>Using the <code>@Query</code> annotation:</p>
 </div>
@@ -1951,7 +1874,8 @@ You can specify the query for a method in the properties file by providing the S
 <pre class="highlight"><code class="language-java" data-lang="java">public interface TradeRepository extends SpannerRepository&lt;Trade, String[]&gt; {
     @Query("SELECT * FROM trades WHERE trades.action = @tag0")
     List&lt;Trade&gt; fetchByActionNamedQuery(@Param("tag0") String action);
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1965,7 +1889,8 @@ A full example would look like:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@Query("SELECT * FROM :com.example.Trade: WHERE trades.action = @tag0")
-List&lt;Trade&gt; fetchByActionNamedQuery(String action);</code></pre>
+List&lt;Trade&gt; fetchByActionNamedQuery(String action);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1978,7 +1903,8 @@ List&lt;Trade&gt; fetchByActionNamedQuery(String action);</code></pre>
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@Query("SELECT * FROM :com.example.Trade: WHERE trades.action = @tag0
   AND price &gt; #{#priceRadius * -1} AND price &lt; #{#priceRadius * 2}")
-List&lt;Trade&gt; fetchByActionNamedQuery(String action, Double priceRadius);</code></pre>
+List&lt;Trade&gt; fetchByActionNamedQuery(String action, Double priceRadius);
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1988,7 +1914,7 @@ You can also use a fixed number of singular parameters such as <code>IN (@string
 </div>
 </div>
 <div class="sect3">
-<h4 id="_projections"><a class="link" href="#_projections">Projections</a></h4>
+<h4 id="_projections"><a class="anchor" href="#_projections"></a><a class="link" href="#_projections">Projections</a></h4>
 <div class="paragraph">
 <p>Spring Data Spanner supports <a href="https://docs.spring.io/spring-data/data-commons/docs/current/reference/html/#projections">projections</a>.
 You can define projection interfaces based on domain types and add query methods that return them in your repository:</p>
@@ -2011,7 +1937,8 @@ public interface TradeRepository extends SpannerRepository&lt;Trade, Key&gt; {
 
 	@Query("SELECT action, symbol FROM trades WHERE action = @action")
 	List&lt;TradeProjection&gt; findByQuery(String action);
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2024,7 +1951,7 @@ As a result accessing underlying properties take the form <code>target.&lt;prope
 </div>
 </div>
 <div class="sect3">
-<h4 id="_empty_result_handling_in_repository_methods"><a class="link" href="#_empty_result_handling_in_repository_methods">Empty result handling in repository methods</a></h4>
+<h4 id="_empty_result_handling_in_repository_methods"><a class="anchor" href="#_empty_result_handling_in_repository_methods"></a><a class="link" href="#_empty_result_handling_in_repository_methods">Empty result handling in repository methods</a></h4>
 <div class="paragraph">
 <p>Java <code>java.util.Optional</code> can be used to indicate the potential absence of a return value.</p>
 </div>
@@ -2047,7 +1974,7 @@ You can enable nullability checks. For more details please see <a href="https://
 </div>
 </div>
 <div class="sect3">
-<h4 id="_rest_repositories"><a class="link" href="#_rest_repositories">REST Repositories</a></h4>
+<h4 id="_rest_repositories"><a class="anchor" href="#_rest_repositories"></a><a class="link" href="#_rest_repositories">REST Repositories</a></h4>
 <div class="paragraph">
 <p>When running with Spring Boot, repositories can be exposed as REST services by simply adding this dependency to your pom file:</p>
 </div>
@@ -2066,7 +1993,8 @@ You can enable nullability checks. For more details please see <a href="https://
 <div class="content">
 <pre class="highlight"><code class="language-java" data-lang="java">@RepositoryRestResource(collectionResourceRel = "trades", path = "trades")
 public interface TradeRepository extends SpannerRepository&lt;Trade, Key&gt; {
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2096,7 +2024,8 @@ class MySpecialIdConverter extends SpannerKeyIdConverter {
     protected String getUrlIdSeparator() {
         return ":";
     }
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2105,7 +2034,7 @@ class MySpecialIdConverter extends SpannerKeyIdConverter {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_database_and_schema_admin"><a class="link" href="#_database_and_schema_admin">Database and Schema Admin</a></h3>
+<h3 id="_database_and_schema_admin"><a class="anchor" href="#_database_and_schema_admin"></a><a class="link" href="#_database_and_schema_admin">Database and Schema Admin</a></h3>
 <div class="paragraph">
 <p>Databases and tables inside Spanner instances can be created automatically from <code>SpannerPersistentEntity</code> objects:</p>
 </div>
@@ -2124,7 +2053,8 @@ public void createTable(SpannerPersistentEntity entity) {
 	  spannerDatabaseAdminTemplate.executeDdlStrings(Arrays.asList(
             spannerSchemaUtils.getCreateTableDDLString(entity.getType())), true);
 	}
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2132,7 +2062,7 @@ public void createTable(SpannerPersistentEntity entity) {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_events"><a class="link" href="#_events">Events</a></h3>
+<h3 id="_events"><a class="anchor" href="#_events"></a><a class="link" href="#_events">Events</a></h3>
 <div class="paragraph">
 <p>Spring Data Cloud Spanner publishes events extending the Spring Framework&#8217;s <code>ApplicationEvent</code> to the context that can be received by <code>ApplicationListener</code> beans you register.</p>
 </div>
@@ -2194,7 +2124,7 @@ public void createTable(SpannerPersistentEntity entity) {
 </table>
 </div>
 <div class="sect2">
-<h3 id="_auditing"><a class="link" href="#_auditing">Auditing</a></h3>
+<h3 id="_auditing"><a class="anchor" href="#_auditing"></a><a class="link" href="#_auditing">Auditing</a></h3>
 <div class="paragraph">
 <p>Spring Data Cloud Spanner supports the <code>@LastModifiedDate</code> and <code>@LastModifiedBy</code> auditing annotations for properties:</p>
 </div>
@@ -2210,7 +2140,8 @@ public class SimpleEntity {
 
     @LastModifiedDate
     DateTime lastTouched;
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2229,7 +2160,8 @@ public class Config {
     public AuditorAware&lt;String&gt; auditorProvider() {
         return () -&gt; Optional.of("YOUR_USERNAME_HERE");
     }
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2248,7 +2180,8 @@ One alternative is to use Spring Security&#8217;s <code>User</code> type:</p>
 			  .map(Authentication::getPrincipal)
 			  .map(User.class::cast);
   }
-}</code></pre>
+}
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2256,7 +2189,7 @@ One alternative is to use Spring Security&#8217;s <code>User</code> type:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_multi_instance_usage"><a class="link" href="#_multi_instance_usage">Multi-Instance Usage</a></h3>
+<h3 id="_multi_instance_usage"><a class="anchor" href="#_multi_instance_usage"></a><a class="link" href="#_multi_instance_usage">Multi-Instance Usage</a></h3>
 <div class="paragraph">
 <p>Your application can be configured to use multiple Cloud Spanner instances or databases by providing a custom bean for <code>DatabaseIdProvider</code>.
 The default bean uses the instance ID, database name, and project ID options you configured in <code>application.properties</code>.</p>
@@ -2266,7 +2199,8 @@ The default bean uses the instance ID, database name, and project ID options you
 <pre class="highlight"><code class="language-java" data-lang="java">    @Bean
     public DatabaseIdProvider databaseIdProvider() {
         // return custom connection options provider
-    }</code></pre>
+    }
+</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2281,9 +2215,9 @@ By providing a custom implementation of this bean (for example, supplying a thre
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spring_boot_actuator_support"><a class="link" href="#_spring_boot_actuator_support">Spring Boot Actuator Support</a></h3>
+<h3 id="_spring_boot_actuator_support"><a class="anchor" href="#_spring_boot_actuator_support"></a><a class="link" href="#_spring_boot_actuator_support">Spring Boot Actuator Support</a></h3>
 <div class="sect3">
-<h4 id="_cloud_spanner_health_indicator"><a class="link" href="#_cloud_spanner_health_indicator">Cloud Spanner Health Indicator</a></h4>
+<h4 id="_cloud_spanner_health_indicator"><a class="anchor" href="#_cloud_spanner_health_indicator"></a><a class="link" href="#_cloud_spanner_health_indicator">Cloud Spanner Health Indicator</a></h4>
 <div class="paragraph">
 <p>If you are using Spring Boot Actuator, you can take advantage of the Cloud Spanner health indicator called <code>spanner</code>.
 The health indicator will verify whether Cloud Spanner is up and accessible by your application.
@@ -2348,7 +2282,7 @@ A query to validate can be configured via <code>spring.cloud.gcp.spanner.health.
 </div>
 </div>
 <div class="sect2">
-<h3 id="_cloud_spanner_emulator"><a class="link" href="#_cloud_spanner_emulator">Cloud Spanner Emulator</a></h3>
+<h3 id="_cloud_spanner_emulator"><a class="anchor" href="#_cloud_spanner_emulator"></a><a class="link" href="#_cloud_spanner_emulator">Cloud Spanner Emulator</a></h3>
 <div class="paragraph">
 <p>The <a href="https://cloud.google.com/sdk">Cloud SDK</a> provides a local, in-memory emulator for Cloud Spanner, which you can use to develop and test your application. As the emulator stores data only in memory, it will not persist data across runs. It is intended to help you use Cloud Spanner for local development and testing, not for production deployments.</p>
 </div>
@@ -2368,13 +2302,20 @@ A query to validate can be configured via <code>spring.cloud.gcp.spanner.health.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>spring.cloud.gcp.spanner.emulator.enabled=true
-spring.cloud.gcp.spanner.emulator-host=${EMULATOR_HOSTPORT}</pre>
+<pre>spring.cloud.gcp.spanner.emulator.enabled=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the default emulator hostname and port (i.e., localhost:9010) is used. If you prefer a customized value, ensure the following property is set in your <code>application.properties</code> of your Spring application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>spring.cloud.gcp.spanner.emulator-host=ip:port</pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_sample"><a class="link" href="#_sample">Sample</a></h3>
+<h3 id="_sample"><a class="anchor" href="#_sample"></a><a class="link" href="#_sample">Sample</a></h3>
 <div class="paragraph">
 <p>There are two sample applications available:</p>
 </div>
@@ -2389,10 +2330,19 @@ spring.cloud.gcp.spanner.emulator-host=${EMULATOR_HOSTPORT}</pre>
 </ol>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_test"><a class="anchor" href="#_test"></a><a class="link" href="#_test">Test</a></h3>
+<div class="paragraph">
+<p><code>Testcontainers</code> provides a <code>gcloud</code> module which offers <code>SpannerEmulatorContainer</code>. See more at the <a href="https://www.testcontainers.org/modules/gcloud/#spanner">docs</a></p>
 </div>
 </div>
 </div>
-<script type="text/javascript" src="js/tocbot/tocbot.min.js"></script>
-<script type="text/javascript" src="js/toc.js"></script>
+</div>
+</div>
+<script src="js/highlight/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</div>
+  </div>
+</div>
 </body>
 </html>

@@ -6,164 +6,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
 <title>Cloud Logging</title>
-<link rel="stylesheet" href="css/spring.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
-.hidden {
-	display: none;
-}
-
-.switch {
-	border-width: 1px 1px 0 1px;
-	border-style: solid;
-	border-color: #7a2518;
-	display: inline-block;
-}
-
-.switch--item {
-	padding: 10px;
-	background-color: #ffffff;
-	color: #7a2518;
-	display: inline-block;
-	cursor: pointer;
-}
-
-.switch--item:not(:first-child) {
-	border-width: 0 0 0 1px;
-	border-style: solid;
-	border-color: #7a2518;
-}
-
-.switch--item.selected {
-	background-color: #7a2519;
-	color: #ffffff;
-}
-
-</style>
-<script type="text/javascript">
-function addBlockSwitches() {
-	for (var primary of document.querySelectorAll('.primary')) {
-		var switchItem = createSwitchItem(primary, createBlockSwitch(primary));
-		switchItem.item.classList.add("selected");
-		var title = primary.querySelector('.title')
-		title.remove();
-	}
-	for (var secondary of document.querySelectorAll('.secondary')) {
-		var primary = findPrimary(secondary);
-		if (primary === null) {
-			console.error("Found secondary block with no primary sibling");
-		}
-		else {
-			var switchItem = createSwitchItem(secondary, primary.querySelector('.switch'));
-			switchItem.content.classList.add("hidden");
-			primary.append(switchItem.content);
-			secondary.remove();
-		}
-	}
-}
-
-function createElementFromHtml(html) {
-	var template = document.createElement('template');
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
-function createBlockSwitch(primary) {
-    var blockSwitch = createElementFromHtml('<div class="switch"></div>');
-    primary.prepend(blockSwitch)
-	return blockSwitch;
-}
-
-function findPrimary(secondary) {
-	var candidate = secondary.previousElementSibling;
-	while (candidate != null && !candidate.classList.contains('primary')) {
-		candidate = candidate.previousElementSibling;
-	}
-	return candidate;
-}
-
-function createSwitchItem(block, blockSwitch) {
-	var blockName = block.querySelector('.title').textContent;
-	var content = block.querySelectorAll('.content').item(0);
-	var colist = nextSibling(block, '.colist');
-	if (colist != null) {
-		content.append(colist);
-	}
-	var item = createElementFromHtml('<div class="switch--item">' + blockName + '</div>');
-	item.dataset.blockName = blockName;
-	content.dataset.blockName = blockName;
-	blockSwitch.append(item);
-	return {'item': item, 'content': content};
-}
-
-function nextSibling(element, selector) {
-	var sibling = element.nextElementSibling;
-	while (sibling) {
-		if (sibling.matches(selector)) {
-			return sibling;
-		}
-		sibling = sibling.nextElementSibling;
-	}
-}
-
-function globalSwitch() {
-	document.querySelectorAll(".switch--item").forEach(function(item) {
-		var blockId = blockIdForSwitchItem(item);
-		var handler = function(event) {
-			selectedText = event.target.textContent;
-			window.localStorage.setItem(blockId, selectedText);
-			for (var switchItem of document.querySelectorAll(".switch--item")) {
-				if (blockIdForSwitchItem(switchItem) === blockId && switchItem.textContent === selectedText) {
-					select(switchItem);
-				}
-			}
-		}
-		item.addEventListener("click", handler);
-		if (item.textContent === window.localStorage.getItem(blockId)) {
-			select(item);
-		}
-	});
-}
-
-function select(selected) {
-	for (var child of selected.parentNode.children) {
-		child.classList.remove("selected");
-	}
-	selected.classList.add("selected");
-	for (var child of selected.parentNode.parentNode.children) {
-		if (child.classList.contains("content")) {
-			if (selected.dataset.blockName === child.dataset.blockName) {
-				child.classList.remove("hidden");
-			}
-			else {
-				child.classList.add("hidden");
-			}
-		}
-	}	
-}
-
-function blockIdForSwitchItem(item) {
-	idComponents = []
-	for (var switchItem of item.parentNode.querySelectorAll(".switch--item")) {
-		idComponents.push(switchItem.textContent.toLowerCase());
-	}
-	return idComponents.sort().join("-")
-}
-
-window.onload = function() {
-	addBlockSwitches();
-	globalSwitch();
-};
-
-</script>
+<link rel="stylesheet" href="css/site.css">
+<script src="js/setup.js"></script><script defer src="js/site.js"></script>
 
 </head>
-<body class="book toc2 toc-left">
+<body class="book toc2 toc-left"><div id="banner-container" class="container" role="banner">
+  <div id="banner" class="contained" role="banner">
+    <div id="switch-theme">
+      <input type="checkbox" id="switch-theme-checkbox" />
+      <label for="switch-theme-checkbox">Dark Theme</label>
+    </div>
+  </div>
+</div>
+<div id="tocbar-container" class="container" role="navigation">
+  <div id="tocbar" class="contained" role="navigation">
+    <button id="toggle-toc"></button>
+  </div>
+</div>
+<div id="main-container" class="container">
+  <div id="main" class="contained">
+    <div id="doc" class="doc">
 <div id="header">
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
+<span id="back-to-index"><a href="${index-link}">Back to index</a></span><ul class="sectlevel1">
 <li><a href="#cloud-logging">Cloud Logging</a>
 <ul class="sectlevel2">
 <li><a href="#_web_mvc_interceptor">Web MVC Interceptor</a></li>
@@ -176,10 +42,10 @@ window.onload = function() {
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="cloud-logging"><a class="link" href="#cloud-logging">Cloud Logging</a></h2>
+<h2 id="cloud-logging"><a class="anchor" href="#cloud-logging"></a><a class="link" href="#cloud-logging">Cloud Logging</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Maven coordinates, using <a href="getting-started.html#bill-of-materials">Spring Cloud GCP BOM</a>:</p>
+<p>Maven coordinates, using <a href="getting-started.html#bill-of-materials">Spring Framework on Google Cloud BOM</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -200,12 +66,12 @@ window.onload = function() {
 </div>
 </div>
 <div class="paragraph">
-<p><a href="https://cloud.google.com/logging/">Cloud Logging</a> is the managed logging service provided by Google Cloud Platform.</p>
+<p><a href="https://cloud.google.com/logging/">Cloud Logging</a> is the managed logging service provided by Google Cloud.</p>
 </div>
 <div class="paragraph">
 <p>This module provides support for associating a web request trace ID with the corresponding log entries.
-It does so by retrieving the <code>X-B3-TraceId</code> value from the <a href="https://logback.qos.ch/manual/mdc.html">Mapped Diagnostic Context (MDC)</a>, which is set by Spring Cloud Sleuth.
-If Spring Cloud Sleuth isn&#8217;t used, the configured <code>TraceIdExtractor</code> extracts the desired header value and sets it as the log entry&#8217;s trace ID.
+It does so by retrieving the <code>X-B3-TraceId</code> value from the <a href="https://logback.qos.ch/manual/mdc.html">Mapped Diagnostic Context (MDC)</a>, which is set by Micrometer.
+If Micrometer isn&#8217;t used, the configured <code>TraceIdExtractor</code> extracts the desired header value and sets it as the log entry&#8217;s trace ID.
 This allows grouping of log messages by request, for example, in the <a href="https://console.cloud.google.com/logs/viewer">Google Cloud Console Logs viewer</a>.</p>
 </div>
 <div class="admonitionblock note">
@@ -215,7 +81,7 @@ This allows grouping of log messages by request, for example, in the <a href="ht
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-Due to the way logging is set up, the GCP project ID and credentials defined in <code>application.properties</code> are ignored.
+Due to the way logging is set up, the Google Cloud project ID and credentials defined in <code>application.properties</code> are ignored.
 Instead, you should set the <code>GOOGLE_CLOUD_PROJECT</code> and <code>GOOGLE_APPLICATION_CREDENTIALS</code> environment variables to the project ID and credentials private key location, respectively.
 You can do this easily if you&#8217;re using the <a href="https://cloud.google.com/sdk">Google Cloud SDK</a>, using the <code>gcloud config set project [YOUR_PROJECT_ID]</code> and <code>gcloud auth application-default login</code> commands, respectively.
 </td>
@@ -223,7 +89,7 @@ You can do this easily if you&#8217;re using the <a href="https://cloud.google.c
 </table>
 </div>
 <div class="sect2">
-<h3 id="_web_mvc_interceptor"><a class="link" href="#_web_mvc_interceptor">Web MVC Interceptor</a></h3>
+<h3 id="_web_mvc_interceptor"><a class="anchor" href="#_web_mvc_interceptor"></a><a class="link" href="#_web_mvc_interceptor">Web MVC Interceptor</a></h3>
 <div class="paragraph">
 <p>For use in Web MVC-based applications, <code>TraceIdLoggingWebMvcInterceptor</code> is provided that extracts the request trace ID from an HTTP request using a <code>TraceIdExtractor</code> and stores it in a thread-local, which can then be used in a logging appender to add the trace ID metadata to log messages.</p>
 </div>
@@ -234,7 +100,7 @@ You can do this easily if you&#8217;re using the <a href="https://cloud.google.c
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-If Spring Cloud GCP Trace is enabled, the logging module disables itself and delegates log correlation to Spring Cloud Sleuth.
+If Spring Framework on Google Cloud Trace is enabled, the logging module disables itself and delegates log correlation to Micrometer.
 </td>
 </tr>
 </table>
@@ -243,17 +109,17 @@ If Spring Cloud GCP Trace is enabled, the logging module disables itself and del
 <p><code>LoggingWebMvcConfigurer</code> configuration class is also provided to help register the <code>TraceIdLoggingWebMvcInterceptor</code> in Spring MVC applications.</p>
 </div>
 <div class="paragraph">
-<p>Applications hosted on the Google Cloud Platform include trace IDs under the <code>x-cloud-trace-context</code> header, which will be included in log entries.
-However, if Sleuth is used the trace ID will be picked up from the MDC.</p>
+<p>Applications hosted on the Google Cloud include trace IDs under the <code>x-cloud-trace-context</code> header, which will be included in log entries.
+However, if Micrometer is used the trace ID will be picked up from the MDC.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_logback_support"><a class="link" href="#_logback_support">Logback Support</a></h3>
+<h3 id="_logback_support"><a class="anchor" href="#_logback_support"></a><a class="link" href="#_logback_support">Logback Support</a></h3>
 <div class="paragraph">
 <p>Currently, only Logback is supported and there are 2 possibilities to log to Cloud Logging via this library with Logback: via direct API calls and through JSON-formatted console logs.</p>
 </div>
 <div class="sect3">
-<h4 id="_log_via_api"><a class="link" href="#_log_via_api">Log via API</a></h4>
+<h4 id="_log_via_api"><a class="anchor" href="#_log_via_api"></a><a class="link" href="#_log_via_api">Log via API</a></h4>
 <div class="paragraph">
 <p>A Cloud Logging appender is available using <code>com/google/cloud/spring/logging/logback-appender.xml</code>.
 This appender builds a Cloud Logging log entry from a JUL or Logback log entry, adds a trace ID to it and sends it to Cloud Logging.</p>
@@ -277,7 +143,7 @@ This appender builds a Cloud Logging log entry from a JUL or Logback log entry, 
 </div>
 <div class="paragraph">
 <p>If you want to have more control over the log output, you can further configure the appender.
-The following properties are available:</p>
+The following properties are available (see <a href="https://github.com/googleapis/java-logging-logback">java-logging-logback project</a> for the full list):</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -305,11 +171,21 @@ This can also be set via the <code>STACKDRIVER_LOG_NAME</code> environmental var
 <td class="tableblock halign-left valign-top"><p class="tableblock">If a log entry with this level is encountered, trigger a flush of locally buffered log to Cloud Logging.
 This can also be set via the <code>STACKDRIVER_LOG_FLUSH_LEVEL</code> environmental variable.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enhancer</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified class name for customizing a logging entry; must implement <code>com.google.cloud.logging.LoggingEnhancer</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>loggingEventEnhancer</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified class name for customizing a logging entry given an <a href="https://logback.qos.ch/apidocs/ch/qos/logback/classic/spi/ILoggingEvent.html"><code>ILoggingEvent</code></a>; must implement <code>com.google.cloud.logging.logback.LoggingEventEnhancer</code>.</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_asynchronous_logging"><a class="link" href="#_asynchronous_logging">Asynchronous Logging</a></h4>
+<h4 id="_asynchronous_logging"><a class="anchor" href="#_asynchronous_logging"></a><a class="link" href="#_asynchronous_logging">Asynchronous Logging</a></h4>
 <div class="paragraph">
 <p>If you would like to send logs asynchronously to Cloud Logging, you can use the <code>AsyncAppender</code>.</p>
 </div>
@@ -333,7 +209,7 @@ This can also be set via the <code>STACKDRIVER_LOG_FLUSH_LEVEL</code> environmen
 </div>
 </div>
 <div class="sect3">
-<h4 id="_log_via_console"><a class="link" href="#_log_via_console">Log via Console</a></h4>
+<h4 id="_log_via_console"><a class="anchor" href="#_log_via_console"></a><a class="link" href="#_log_via_console">Log via Console</a></h4>
 <div class="paragraph">
 <p>For Logback, a <code>com/google/cloud/spring/logging/logback-json-appender.xml</code> file is made available for import to make it easier to configure the JSON Logback appender.</p>
 </div>
@@ -433,7 +309,7 @@ The following properties are available:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>includeMDC</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Should all MDC properties be included.
-The MDC properties <code>X-B3-TraceId</code>, <code>X-B3-SpanId</code> and <code>X-Span-Export</code> provided by Spring Sleuth will get excluded as they get handled separately</p></td>
+The MDC properties <code>X-B3-TraceId</code>, <code>X-B3-SpanId</code> and <code>X-Span-Export</code> provided by Micrometer will get excluded as they get handled separately</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>includeLoggerName</code></p></td>
@@ -526,7 +402,7 @@ This setting is only evaluated if <code>includeFormattedMessage</code> is <code>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_sample"><a class="link" href="#_sample">Sample</a></h3>
+<h3 id="_sample"><a class="anchor" href="#_sample"></a><a class="link" href="#_sample">Sample</a></h3>
 <div class="paragraph">
 <p>A <a href="https://github.com/GoogleCloudPlatform/spring-cloud-gcp/tree/main/spring-cloud-gcp-samples/spring-cloud-gcp-logging-sample">Sample Spring Boot Application</a> is provided to show how to use the Cloud logging starter.</p>
 </div>
@@ -534,7 +410,10 @@ This setting is only evaluated if <code>includeFormattedMessage</code> is <code>
 </div>
 </div>
 </div>
-<script type="text/javascript" src="js/tocbot/tocbot.min.js"></script>
-<script type="text/javascript" src="js/toc.js"></script>
+<script src="js/highlight/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
+</div>
+  </div>
+</div>
 </body>
 </html>
